@@ -1,9 +1,9 @@
 // ============================================
 // CONFIGURACIÓN DE VELOCIDAD DE ESTRELLAS
 // ============================================
-// MODIFICA ESTA VARIABLE PARA CAMBIAR LA VELOCIDAD
+// ⭐ MODIFICA ESTA VARIABLE PARA CAMBIAR LA VELOCIDAD
 // Valores recomendados: 0.1 (muy lento) a 2.0 (rápido)
-const STAR_SPEED = 2;
+const STAR_SPEED = 0.1;
 
 // ============================================
 // ANIMACIÓN DE ESTRELLAS
@@ -91,6 +91,7 @@ class Navigation {
     constructor() {
         this.navButtons = document.querySelectorAll('.nav-btn');
         this.init();
+        this.setActiveButton();
     }
 
     init() {
@@ -99,8 +100,35 @@ class Navigation {
         });
     }
 
+    setActiveButton() {
+        // Detectar la página actual
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        
+        this.navButtons.forEach(btn => {
+            const section = btn.dataset.section;
+            let targetPage = 'index.html';
+            
+            if (section === 'home') {
+                targetPage = 'index.html';
+            } else if (section === 'about') {
+                targetPage = 'about.html';
+            } else if (section === 'projects') {
+                targetPage = 'projects.html';
+            } else if (section === 'contact') {
+                targetPage = 'contact.html';
+            }
+            
+            if (currentPage === targetPage || (currentPage === '' && targetPage === 'index.html')) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
     handleNavClick(e) {
         const clickedButton = e.currentTarget;
+        const section = clickedButton.dataset.section;
         
         // Remover clase active de todos los botones
         this.navButtons.forEach(btn => btn.classList.remove('active'));
@@ -108,9 +136,20 @@ class Navigation {
         // Añadir clase active al botón clickeado
         clickedButton.classList.add('active');
 
-        // Aquí puedes añadir lógica adicional para cambiar de sección
-        const section = clickedButton.dataset.section;
-        console.log(`Navegando a sección: ${section}`);
+        // Navegar a la página correspondiente
+        let targetPage = 'index.html';
+        
+        if (section === 'home') {
+            targetPage = 'index.html';
+        } else if (section === 'about') {
+            targetPage = 'about.html';
+        } else if (section === 'projects') {
+            targetPage = 'projects.html';
+        } else if (section === 'contact') {
+            targetPage = 'contact.html';
+        }
+        
+        window.location.href = targetPage;
     }
 }
 
@@ -191,6 +230,8 @@ class LanguageMenu {
 class LoginForm {
     constructor() {
         this.form = document.getElementById('login-form');
+        if (!this.form) return; // Si no existe el formulario, salir
+
         this.passwordInput = document.getElementById('password');
         this.togglePasswordBtn = document.getElementById('toggle-password');
         this.eyeIcon = document.getElementById('eye-icon');
@@ -244,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar menú de lenguajes
     const languageMenu = new LanguageMenu();
 
-    // Inicializar formulario
+    // Inicializar formulario (solo si existe)
     const loginForm = new LoginForm();
 
     console.log('Portfolio inicializado correctamente');
